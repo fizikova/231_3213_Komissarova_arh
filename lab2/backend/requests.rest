@@ -1,0 +1,37 @@
+@hostname = http://127.0.0.1:80
+
+### 1. Получить список продуктов (List)
+GET {{hostname}}/api/alcoholproducts/
+Accept: application/json
+
+### 2. Создать новый продукт (Create)
+POST {{hostname}}/api/alcoholproducts/
+Content-Type: application/json
+
+{
+  "name": "Demo Beer",
+  "brand": "Test Brewery",
+  "category": "beer",
+  "volume_ml": 500,
+  "price": "120.00",
+  "in_stock": true,
+  "description": "Тестовое описание",
+  "supplier": "Local Supplier"
+}
+
+### 3. Получить продукт по ID (Retrieve)
+GET {{hostname}}/api/alcoholproducts/2/
+Accept: application/json
+
+### 4. Частично обновить продукт (PATCH)
+PATCH {{hostname}}/api/alcoholproducts/1/
+Content-Type: application/json
+
+{
+  "price": "99.00",
+  "in_stock": false
+}
+
+### 5. Удалить продукт (DELETE)
+DELETE {{hostname}}/api/alcoholproducts/1/
+Accept: application/json

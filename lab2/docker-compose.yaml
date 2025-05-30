@@ -1,0 +1,47 @@
+#version: '3.8'
+
+services:
+  postgres_service:
+    image: postgres:17-alpine
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${PGDATABASE}
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend_service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres_service
+    env_file:
+      - .env
+    environment:
+      DATABASE_NAME: ${PGDATABASE}
+      DATABASE_USER: ${PGUSER}
+      DATABASE_PASSWORD: ${PGPASSWORD}
+      DATABASE_HOST: postgres_service
+      DATABASE_PORT: ${PGPORT}
+    volumes:
+      - static_volume:/staticfiles
+    expose:
+      - "8000"
+
+  nginx_service:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    depends_on:
+      - backend_service
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/staticfiles
+
+volumes:
+  postgres_data:
+  static_volume:
